@@ -18,6 +18,6 @@ data class CaseStatus(
     @OneToMany(mappedBy = "statusId",
         cascade = [jakarta.persistence.CascadeType.ALL],
         orphanRemoval = true)
-    val mediationCase: MediationCase
+    val mediationCases: List<MediationCase> = emptyList()
 
 )
