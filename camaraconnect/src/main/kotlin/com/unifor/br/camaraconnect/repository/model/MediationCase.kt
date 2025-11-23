@@ -36,5 +36,4 @@ data class MediationCase(
         foreignKey = ForeignKey(name = "fkCaseMediator")
     )
     val mediatorId: Mediator,//FK
-
 )
