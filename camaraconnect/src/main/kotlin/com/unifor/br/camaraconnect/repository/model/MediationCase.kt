@@ -1,3 +1,4 @@
+//MediationCase
 package com.unifor.br.camaraconnect.repository.model
 
 import jakarta.persistence.Entity
@@ -7,6 +8,7 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
@@ -36,4 +38,8 @@ data class MediationCase(
         foreignKey = ForeignKey(name = "fkCaseMediator")
     )
     val mediatorId: Mediator,//FK
+    @OneToMany(mappedBy = "caseId",
+        cascade = [jakarta.persistence.CascadeType.ALL],
+        orphanRemoval = true)
+    val partyId: List<Parties> = emptyList()
 )

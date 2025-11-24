@@ -1,3 +1,4 @@
+//CaseStatus.kt
 package com.unifor.br.camaraconnect.repository.model
 
 import jakarta.persistence.Entity
@@ -15,9 +16,7 @@ data class CaseStatus(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val statusId: Int,
     val statusName: String,
-    @OneToMany(mappedBy = "statusId",
-        cascade = [jakarta.persistence.CascadeType.ALL],
-        orphanRemoval = true)
+    @OneToMany(mappedBy = "statusId")
     val mediationCases: List<MediationCase> = emptyList()
 
 )

@@ -1,3 +1,4 @@
+//User.kt
 package com.unifor.br.camaraconnect.repository.model
 
 import jakarta.persistence.Entity
@@ -24,5 +25,5 @@ data class User(
     @OneToOne(mappedBy = "userId",
         cascade = [jakarta.persistence.CascadeType.ALL],
         orphanRemoval = true)
-    val mediators: List<Mediator> = emptyList()
+    val mediators: Mediator?= null
 )

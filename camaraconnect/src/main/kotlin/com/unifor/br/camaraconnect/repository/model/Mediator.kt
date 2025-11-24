@@ -1,3 +1,4 @@
+//Mediator.kt
 package com.unifor.br.camaraconnect.repository.model
 
 import jakarta.persistence.Entity
