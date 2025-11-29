@@ -1,22 +1,21 @@
 //CaseStatus.kt
 package com.unifor.br.camaraconnect.repository.model
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.OneToMany
-import jakarta.persistence.Table
 
 
-@Entity
-@Table(name="case_status")
-data class CaseStatus(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val statusId: Int,
-    val statusName: String,
-    @OneToMany(mappedBy = "statusId")
-    val mediationCases: List<MediationCase> = emptyList()
 
-)
+
+enum class CaseStatus(val descricao: String) {
+    EM_ANDAMENTO("Em Andamento"),
+    AGENDADO("Agendado"),
+    CONCLUIDO("Concluído");
+
+    companion object {
+        fun fromString(value: String): CaseStatus {
+            return entries.find {
+                it.name.equals(value, ignoreCase = true)
+            } ?: throw IllegalArgumentException("Status Inválido: $value")
+        }
+    }
+
+}
