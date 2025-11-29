@@ -41,5 +41,5 @@ data class MediationCase(
     @OneToMany(mappedBy = "caseId",
         cascade = [jakarta.persistence.CascadeType.ALL],
         orphanRemoval = true)
-    var partyId: List<Parties> = emptyList()
+    var partyId: MutableList<Parties> = mutableListOf()
 )

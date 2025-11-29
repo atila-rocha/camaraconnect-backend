@@ -28,11 +28,11 @@ data class LegalRepresentativeContacts(
     @CreationTimestamp
     val dtCreatedAt : LocalDateTime = LocalDateTime.now(),
     @UpdateTimestamp
-    val datetimeUpdatedAt: LocalDateTime= LocalDateTime.now(),
+    var datetimeUpdatedAt: LocalDateTime= LocalDateTime.now(),
     @ManyToOne
     @JoinColumn(name = "legalRepresentativeId",
         nullable=false,
         foreignKey= ForeignKey(name = "fkLegalContacts")
     )
-    val legalRepresentativeId: LegalRepresentative
+    var legalRepresentativeId: LegalRepresentative
 )

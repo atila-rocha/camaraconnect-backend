@@ -26,7 +26,7 @@ data class Parties(
     @CreationTimestamp
     val datetimeCreatedAt: LocalDateTime= LocalDateTime.now(),
     @UpdateTimestamp
-    val datetimeUpdatedAt: LocalDateTime= LocalDateTime.now(),
+    var datetimeUpdatedAt: LocalDateTime= LocalDateTime.now(),
     @ManyToOne
     @JoinColumn(name = "caseId",
         nullable = false,
@@ -37,9 +37,9 @@ data class Parties(
         cascade = [jakarta.persistence.CascadeType.ALL],
         orphanRemoval = true
     )
-    val legalRepresentrativeId: List<LegalRepresentative> = emptyList(),
+    var legalRepresentrativeId: MutableList<LegalRepresentative> = mutableListOf(),
     @OneToMany(mappedBy = "partyId",
         cascade = [jakarta.persistence.CascadeType.ALL],
         orphanRemoval = true)
-    val contact: List<PartiesContacts> = emptyList(),
+    var contact: MutableList<PartiesContacts> = mutableListOf(),
 )

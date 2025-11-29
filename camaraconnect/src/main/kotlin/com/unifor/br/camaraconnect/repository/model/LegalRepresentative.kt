@@ -26,15 +26,15 @@ data class LegalRepresentative(
     @CreationTimestamp
     val datetimeCreatedAt: LocalDateTime= LocalDateTime.now(),
     @UpdateTimestamp
-    val datetimeUpdatedAt: LocalDateTime= LocalDateTime.now(),
+    var datetimeUpdatedAt: LocalDateTime= LocalDateTime.now(),
     @ManyToOne
     @JoinColumn(name = "partyId",
         nullable = false,
         foreignKey = ForeignKey(name = "fkLegalParty")
     )
-    val partyId: Parties,
+    var partyId: Parties,
     @OneToMany(mappedBy = "legalRepresentativeId",
         cascade = [jakarta.persistence.CascadeType.ALL],
         orphanRemoval = true)
-    val contact: List<LegalRepresentativeContacts> = emptyList(),
+    var contact: MutableList<LegalRepresentativeContacts> = mutableListOf(),
 )

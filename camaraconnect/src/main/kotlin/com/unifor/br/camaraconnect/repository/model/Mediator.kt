@@ -24,7 +24,7 @@ data class Mediator(
     @CreationTimestamp
     val datetimeCreatedAt: LocalDateTime= LocalDateTime.now(),
     @UpdateTimestamp
-    val datetimeUpdatedAt: LocalDateTime= LocalDateTime.now(),
+    var datetimeUpdatedAt: LocalDateTime= LocalDateTime.now(),
     @OneToOne
     @JoinColumn(name = "userId",
         nullable = false,
@@ -34,5 +34,5 @@ data class Mediator(
     @OneToMany(mappedBy = "mediatorId",
         cascade = [jakarta.persistence.CascadeType.ALL],
         orphanRemoval = true)
-    val mediationCases: List<MediationCase> = emptyList()
+    var mediationCases: MutableList<MediationCase> = mutableListOf()
 )

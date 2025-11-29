@@ -28,7 +28,7 @@ data class PartiesContacts(
     @CreationTimestamp
     val dtCreatedAt : LocalDateTime = LocalDateTime.now(),
     @UpdateTimestamp
-    val datetimeUpdatedAt: LocalDateTime= LocalDateTime.now(),
+    var datetimeUpdatedAt: LocalDateTime= LocalDateTime.now(),
     @ManyToOne
     @JoinColumn(name = "partyId",
         nullable=false,

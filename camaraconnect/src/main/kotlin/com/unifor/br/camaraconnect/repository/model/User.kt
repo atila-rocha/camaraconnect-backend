@@ -24,7 +24,7 @@ data class User(
     @CreationTimestamp
     val datetimeCreatedAt: LocalDateTime= LocalDateTime.now(),
     @UpdateTimestamp
-    val datetimeUpdatedAt: LocalDateTime= LocalDateTime.now(),
+    var datetimeUpdatedAt: LocalDateTime= LocalDateTime.now(),
     val userType: String?="MEDIATOR",//verificar
     @OneToOne(mappedBy = "userId",
         cascade = [jakarta.persistence.CascadeType.ALL],
