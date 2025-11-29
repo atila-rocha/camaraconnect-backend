@@ -13,19 +13,22 @@ import jakarta.persistence.Table
 import org.hibernate.annotations.CreationTimestamp
 import java.time.LocalDateTime
 import jakarta.persistence.ManyToOne
+import org.hibernate.annotations.UpdateTimestamp
 
 @Entity
 @Table(name = "partiescontacts")
 data class PartiesContacts(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val contactId: Int,
+    val contactId: Int? = null,
     @Enumerated(EnumType.STRING)
-    val contactType: ContactType,
-    val contact: String,
-    val isPrimary : Boolean = false,
+    var contactType: ContactType,
+    var contact: String,
+    var isPrimary : Boolean = false,
     @CreationTimestamp
     val dtCreatedAt : LocalDateTime = LocalDateTime.now(),
+    @UpdateTimestamp
+    val datetimeUpdatedAt: LocalDateTime= LocalDateTime.now(),
     @ManyToOne
     @JoinColumn(name = "partyId",
         nullable=false,

@@ -10,16 +10,23 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import jakarta.persistence.OneToMany
+import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.UpdateTimestamp
+import java.time.LocalDateTime
 
 @Entity
 @Table(name="legal_representative")
 data class LegalRepresentative(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val representativeId: Int,
-    val name: String,
-    val oabNumber: String,
-    val oabState: String,
+    val representativeId: Int? = null,
+    var name: String,
+    var oabNumber: String,
+    var oabState: String,
+    @CreationTimestamp
+    val datetimeCreatedAt: LocalDateTime= LocalDateTime.now(),
+    @UpdateTimestamp
+    val datetimeUpdatedAt: LocalDateTime= LocalDateTime.now(),
     @ManyToOne
     @JoinColumn(name = "partyId",
         nullable = false,

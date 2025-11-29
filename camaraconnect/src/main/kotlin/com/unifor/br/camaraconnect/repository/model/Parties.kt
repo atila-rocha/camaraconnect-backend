@@ -10,17 +10,23 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import jakarta.persistence.ManyToOne
+import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.UpdateTimestamp
+import java.time.LocalDateTime
 
 @Entity
 @Table(name="parties")
 data class Parties(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val partyId: Int,
-    //estudar como implementa FKs
-    val name: String,
-    val documentNumber: String,
-    val partyType: String,//pessoa fisica ou pj
+    val partyId: Int? = null,
+    var name: String,
+    var documentNumber: String,
+    var partyType: String,//pessoa fisica ou pj ENUM?
+    @CreationTimestamp
+    val datetimeCreatedAt: LocalDateTime= LocalDateTime.now(),
+    @UpdateTimestamp
+    val datetimeUpdatedAt: LocalDateTime= LocalDateTime.now(),
     @ManyToOne
     @JoinColumn(name = "caseId",
         nullable = false,

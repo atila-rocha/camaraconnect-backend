@@ -7,6 +7,8 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.OneToOne
+import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 
 @Entity
@@ -14,12 +16,14 @@ import java.time.LocalDateTime
 data class User(
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    val userId: Int,
-    val username: String,
-    val password: String,
-    val email: String,
+    val userId: Int? = null,
+    var username: String,
+    var password: String,
+    var email: String,
     val role: String?="MEDIATOR", //verificar
+    @CreationTimestamp
     val datetimeCreatedAt: LocalDateTime= LocalDateTime.now(),
+    @UpdateTimestamp
     val datetimeUpdatedAt: LocalDateTime= LocalDateTime.now(),
     val userType: String?="MEDIATOR",//verificar
     @OneToOne(mappedBy = "userId",

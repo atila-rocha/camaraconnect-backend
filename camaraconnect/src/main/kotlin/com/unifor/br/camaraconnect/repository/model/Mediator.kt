@@ -10,14 +10,21 @@ import jakarta.persistence.OneToMany
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import jakarta.persistence.JoinColumn
+import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.UpdateTimestamp
+import java.time.LocalDateTime
 
 @Entity
 @Table(name="mediator")
 data class Mediator(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val mediatorId: Int,
+    val mediatorId: Int? = null,
     val registrationNumber: String,
+    @CreationTimestamp
+    val datetimeCreatedAt: LocalDateTime= LocalDateTime.now(),
+    @UpdateTimestamp
+    val datetimeUpdatedAt: LocalDateTime= LocalDateTime.now(),
     @OneToOne
     @JoinColumn(name = "userId",
         nullable = false,
