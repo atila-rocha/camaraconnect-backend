@@ -23,7 +23,7 @@ data class MediationCase(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val caseId: Int? = null,
-    val caseNum: Int,
+    val caseNum: String,
     var description: String?="",
     @CreationTimestamp
     val datetimeCreatedAt: LocalDateTime = LocalDateTime.now(),
