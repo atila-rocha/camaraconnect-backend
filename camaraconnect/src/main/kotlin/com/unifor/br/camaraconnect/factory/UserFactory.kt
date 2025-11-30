@@ -24,6 +24,8 @@ class UserFactory {
             password = user.password,
             email = user.email,
             role = user.role,
+            datetimeCreatedAt = user.datetimeCreatedAt,
+            datetimeUpdatedAt = user.datetimeUpdatedAt
 
         )
     }
