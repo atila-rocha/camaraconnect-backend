@@ -1,4 +1,14 @@
 package com.unifor.br.camaraconnect.api.controller.dto.response
 
-class LegalRepresentativeContactsResponseDTO {
-}
+import com.unifor.br.camaraconnect.repository.model.ContactType
+import java.time.LocalDateTime
+
+data class LegalRepresentativeContactsResponseDTO (
+    val contactId: Int,
+    val contactType: ContactType,
+    val contact: String,
+    val isPrimary: Boolean,
+    val legalRepresentativeId: Int,
+    val datetimeCreatedAt: LocalDateTime,
+    val datetimeUpdatedAt: LocalDateTime,
+)
