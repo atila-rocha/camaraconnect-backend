@@ -38,6 +38,22 @@ class UserService (
         return Optional.of(userOptional.get())
     }
 
+    fun findUserByEmail(email: String): Optional<User>{
+        val userOptional = userRepository.findUserByEmail(email)
+        if (userOptional.isEmpty){
+            return Optional.empty()
+        }
+        return Optional.of(userOptional.get())
+    }
+
+    fun findUserByUsername(username: String): Optional<User>{
+        val userOptional = userRepository.findUserByUsername(username)
+        if (userOptional.isEmpty){
+            return Optional.empty()
+        }
+        return Optional.of(userOptional.get())
+    }
+
     fun findUserById(id: Int): Optional<User>{
         val userOptional = userRepository.findById(id)
         if (userOptional.isEmpty){

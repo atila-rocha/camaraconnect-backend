@@ -58,6 +58,24 @@ class UserController(
         return ResponseEntity.ok(userFactory.userToUserResponse(userOptional.get()))
     }
 
+    @GetMapping("/{email}")
+    fun getuserByEmail(@PathVariable email: String): ResponseEntity<UserResponseDTO>{
+        val userOptional = userService.findUserByEmail(email)
+        if (userOptional.isEmpty){
+            return ResponseEntity.notFound().build()
+        }
+        return ResponseEntity.ok(userFactory.userToUserResponse(userOptional.get()))
+    }
+
+    @GetMapping("/{username}")
+    fun getuserByUsername(@PathVariable username: String): ResponseEntity<UserResponseDTO>{
+        val userOptional = userService.findUserByUsername(username)
+        if (userOptional.isEmpty){
+            return ResponseEntity.notFound().build()
+        }
+        return ResponseEntity.ok(userFactory.userToUserResponse(userOptional.get()))
+    }
+
     @GetMapping
     fun getAllUsers(): ResponseEntity<List<UserResponseDTO>>{
         val users = userService.findAllUsers()
