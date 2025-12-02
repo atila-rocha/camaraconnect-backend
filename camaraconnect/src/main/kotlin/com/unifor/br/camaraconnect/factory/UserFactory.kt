@@ -9,12 +9,13 @@ import org.springframework.stereotype.Component
 @Component
 class UserFactory {
     fun userResquestToUser(dto: UserRequestDTO): User{
-        return User(
-            username = dto.username,
-            password = dto.password,
-            email = dto.email,
-            role = dto.role,
-        )
+        val user = User.Builder()
+            .username(dto.username)
+            .password(dto.password)
+            .email(dto.email)
+            .role(dto.role!!)
+            .build()
+        return user
     }
 
     fun userToUserResponse(user: User): UserResponseDTO{

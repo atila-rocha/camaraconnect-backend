@@ -19,12 +19,12 @@ class UserService (
         if (userOptional.isEmpty){
             return Optional.empty()
         }
-        val userToUpdate= User(
-            userId = userOptional.get().userId,
-            username=user.username,
-            password=user.password,
-            email=user.email
-        )
+        val userToUpdate= User.Builder()
+            .userId(userOptional.get().userId!!)
+            .username(user.username)
+            .password(user.password)
+            .email(user.email)
+            .build()
         val updatedUser= userRepository.save(userToUpdate)
         return Optional.of(updatedUser)
     }
