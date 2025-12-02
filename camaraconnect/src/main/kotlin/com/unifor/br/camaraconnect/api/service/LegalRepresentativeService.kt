@@ -1,7 +1,7 @@
 package com.unifor.br.camaraconnect.api.service
 
 import com.unifor.br.camaraconnect.api.controller.dto.request.LegalRepresentativeContactsRequestDTO
-import com.unifor.br.camaraconnect.factory.LegalRepresetativeFactory
+import com.unifor.br.camaraconnect.factory.LegalRepresentativeFactory
 import com.unifor.br.camaraconnect.repository.LegalRepresentativeRepository
 import com.unifor.br.camaraconnect.repository.PartiesRepository
 import com.unifor.br.camaraconnect.repository.model.LegalRepresentative
@@ -14,7 +14,7 @@ import java.util.Collections.emptyList
 class LegalRepresentativeService(
     private val  legalRepresentativeRepository: LegalRepresentativeRepository,
     private val partiesRepository: PartiesRepository,
-    private val legalRepresetativeFactory: LegalRepresetativeFactory,
+    private val legalRepresentativeFactory: LegalRepresentativeFactory,
     ) {
         fun createRepresentative(
             name: String,
@@ -24,7 +24,7 @@ class LegalRepresentativeService(
             contacts: List<LegalRepresentativeContactsRequestDTO> = emptyList()
         ): Optional<LegalRepresentative>{
             val party = partiesRepository.findById(partyId).orElseThrow { RuntimeException("Parte não encontrada") }
-            val representative = legalRepresetativeFactory.createRepresentative(
+            val representative = legalRepresentativeFactory.createRepresentative(
                 name,
                 oabNumber,
                 oabState,
@@ -46,7 +46,7 @@ class LegalRepresentativeService(
             return Optional.empty()
         }
         val party = partiesRepository.findById(partyId).orElseThrow { RuntimeException("Parte nao encontrada") }
-        val representativeToUpdate= legalRepresetativeFactory.createRepresentative(
+        val representativeToUpdate= legalRepresentativeFactory.createRepresentative(
             name,
             oabNumber,
             oabState,

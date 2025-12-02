@@ -16,7 +16,7 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name="legal_representative")
-data class LegalRepresentative(
+data class LegalRepresentative private constructor(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val representativeId: Int? = null,
@@ -37,4 +37,27 @@ data class LegalRepresentative(
         cascade = [jakarta.persistence.CascadeType.ALL],
         orphanRemoval = true)
     var contact: MutableList<LegalRepresentativeContacts> = mutableListOf(),
-)
+){
+    class Builder{
+        private var name : String = ""
+        private var oabNumber : String = ""
+        private var oabState : String = ""
+        private var partyId : Parties? = null
+        private var contact : MutableList<LegalRepresentativeContacts> = emptyList<LegalRepresentativeContacts>().toMutableList()
+
+        fun name(name:String)= apply { this.name=name }
+        fun oabNumber(oabNumber:String)= apply { this.oabNumber=oabNumber }
+        fun oabState(oabState: String)= apply { this.oabState=oabState }
+        fun partyId(partyId: Parties)= apply { this.partyId=partyId }
+        fun contact(contact: MutableList<LegalRepresentativeContacts>)= apply { this.contact=contact }
+        fun build(): LegalRepresentative{
+            return LegalRepresentative(
+                name = name,
+                oabNumber = oabNumber,
+                oabState = oabState,
+                partyId = partyId!!,
+                contact = contact
+            )
+        }
+    }
+}
