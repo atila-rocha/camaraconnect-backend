@@ -1,18 +1,14 @@
 package com.unifor.br.camaraconnect.factory
 
 import com.unifor.br.camaraconnect.api.controller.dto.request.LegalRepresentativeContactsRequestDTO
-import com.unifor.br.camaraconnect.api.controller.dto.request.LegalRepresentativeRequestDTO
-import com.unifor.br.camaraconnect.api.controller.dto.request.PartiesContactsRequestDTO
-import com.unifor.br.camaraconnect.api.controller.dto.request.PartiesRequestDTO
 import com.unifor.br.camaraconnect.api.controller.dto.response.LegalRepresentativeResponseDTO
-import com.unifor.br.camaraconnect.repository.model.ContactType
 import com.unifor.br.camaraconnect.repository.model.LegalRepresentative
 import com.unifor.br.camaraconnect.repository.model.LegalRepresentativeContacts
-import com.unifor.br.camaraconnect.repository.model.MediationCase
 import com.unifor.br.camaraconnect.repository.model.Parties
-import java.util.Collections
+import org.springframework.stereotype.Component
 
-class LegalRepresetativeFactory {
+@Component
+class LegalRepresentativeFactory {
     fun createRepresentative(
         name: String,
         oabNumber: String,
@@ -21,19 +17,19 @@ class LegalRepresetativeFactory {
         contacts: List<LegalRepresentativeContactsRequestDTO> = emptyList(),
         party: Parties
     ): LegalRepresentative{
-        val representative = LegalRepresentative(
-            name = name,
-            oabNumber = oabNumber,
-            oabState = oabState,
-            partyId = party,
-        )
+        val representative = LegalRepresentative.Builder()
+            .name(name)
+            .oabNumber(oabNumber)
+            .oabState(oabState)
+            .partyId(party)
+            .build()
         val contactsEntities = contacts.map {
-            val representativeContact= LegalRepresentativeContacts(
-                contactType = it.contactType,
-                contact = it.contact,
-                isPrimary = it.isPrimary,
-                legalRepresentativeId = representative
-            )
+            val representativeContact= LegalRepresentativeContacts.Builder()
+                .contactType(it.contactType)
+                .contact(it.contact)
+                .isPrimary(it.isPrimary)
+                .legalRepresentative(representative)
+                .build()
             representativeContact
         }.toMutableList()
 
