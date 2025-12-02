@@ -1,6 +1,9 @@
 package com.unifor.br.camaraconnect.api.service
 
+import com.unifor.br.camaraconnect.factory.MediationCaseFactory
 import com.unifor.br.camaraconnect.repository.MediationCaseRepository
+import com.unifor.br.camaraconnect.repository.MediatorRepository
+import com.unifor.br.camaraconnect.repository.PartiesRepository
 import com.unifor.br.camaraconnect.repository.model.CaseStatus
 import com.unifor.br.camaraconnect.repository.model.MediationCase
 import com.unifor.br.camaraconnect.repository.model.Mediator
@@ -10,24 +13,36 @@ import java.util.Optional
 
 @Service
 class MediationCaseService (
-    private val  mediationcaseRepository: MediationCaseRepository
-) {
-    fun createMediatonCase(mediationcase: MediationCase): Optional<MediationCase>{
-        val newMediationCase = mediationcaseRepository.save(mediationcase)
+    private val  mediationcaseRepository: MediationCaseRepository,
+    private val mediatorRepository: MediatorRepository,
+    private val mediationCaseFactory: MediationCaseFactory,
+    private val partiesService: PartiesService,
+
+    ) {
+    fun createMediatonCase(
+        caseNum: String,
+        description: String? = "",
+        mediatorId: Int,
+    ): Optional<MediationCase>{
+        val mediator = mediatorRepository.findById(mediatorId).orElseThrow { RuntimeException("Mediador não encontrado") }
+        val saved= mediationCaseFactory.createMediationCase(caseNum, description, mediator)
+        val newMediationCase = mediationcaseRepository.save(saved)
         return Optional.of(newMediationCase)
     }
-    fun updateMediatonCase(id:Int, mediationCase: MediationCase):Optional<MediationCase>{
-        val mediationOptional = mediationcaseRepository.findById(id)
-        if (mediationOptional.isEmpty){
-            return Optional.empty()
-        }
+    fun updateMediatonCase(id:Int, caseNum: String, description: String? = "", mediatorId: Int, caseStatus: CaseStatus):Optional<MediationCase>{
+        val mediator = mediatorRepository.findById(mediatorId).orElseThrow { RuntimeException("Mediador não encontrado") }
+        val mediationOptional = mediationcaseRepository.findById(id).orElseThrow { RuntimeException("Caso não encontrado") }
+        val parties = partiesService.findAllByCaseId(mediationOptional).toMutableList()
+//        if (mediationOptional.isEmpty){
+//            return Optional.empty()
+//        }
         val mediatonToUpdate= MediationCase(
-            caseId = mediationOptional.get().caseId,
-            caseNum = mediationOptional.get().caseNum,
-            description = mediationCase.description,
-            caseStatus = mediationCase.caseStatus,
-            mediatorId = mediationCase.mediatorId,
-            partyId = mediationCase.partyId
+            caseId = mediationOptional.caseId,
+            caseNum = mediationOptional.caseNum,
+            description = description,
+            caseStatus = caseStatus,
+            mediatorId = mediator,
+            partyId = parties
         )
         val updatedMediaton= mediationcaseRepository.save(mediatonToUpdate)
         return Optional.of(updatedMediaton)
@@ -58,7 +73,7 @@ class MediationCaseService (
     }
 
     fun findMediationCaseByCaseStatusOrderByUpdatedAtDesc(caseStatus: CaseStatus): List<MediationCase>{
-        return mediationcaseRepository.findByAllCaseStatusOrderByDatetimeUpdatedAtDesc(caseStatus)
+        return mediationcaseRepository.findAllByCaseStatusOrderByDatetimeUpdatedAtDesc(caseStatus)
     }
 
     fun findAllByMediatorId(mediator: Mediator): List<MediationCase>{
@@ -88,11 +103,11 @@ class MediationCaseService (
     fun findAllByPartyName(name: String): List<MediationCase>{
         return mediationcaseRepository.findAllByPartyId_NameContainingIgnoreCase(name)
     }
-    fun countCasesbyCaseStatus(caseStatus: CaseStatus): Optional<Long>{
+    fun countCasesbyCaseStatus(caseStatus: CaseStatus): Long{
         return mediationcaseRepository.countByCaseStatus(caseStatus)
     }
 
-    fun existsByCaseNum(caseNum: String): Optional<Boolean>{
+    fun existsByCaseNum(caseNum: String): Boolean{
         return mediationcaseRepository.existsByCaseNum(caseNum)
     }
 
@@ -103,7 +118,7 @@ class MediationCaseService (
         }
         return Optional.of(mediatonCaseOptional.get())
     }
-    fun findAllMediatornCases(): List<MediationCase>{
+    fun findAllMediationCases(): List<MediationCase>{
         return mediationcaseRepository.findAll()
     }
 }

@@ -60,7 +60,7 @@ class LegalRepresentativeService(
     }
 
     fun findAllByOabState(oabNumber: String, oabState: String): List<LegalRepresentative>{
-        return legalRepresentativeRepository.findAllByOabState(oabNumber, oabState)
+        return legalRepresentativeRepository.findAllByOabState(oabState)
     }
 
     fun findAllByPartyId(party: Parties): List<LegalRepresentative>{

@@ -1,19 +1,36 @@
 package com.unifor.br.camaraconnect.api.service
 
+import com.unifor.br.camaraconnect.api.controller.dto.request.LegalRepresentativeRequestDTO
+import com.unifor.br.camaraconnect.api.controller.dto.request.PartiesContactsRequestDTO
+import com.unifor.br.camaraconnect.factory.PartiesFactory
+import com.unifor.br.camaraconnect.repository.MediationCaseRepository
 import com.unifor.br.camaraconnect.repository.PartiesRepository
 import com.unifor.br.camaraconnect.repository.model.MediationCase
 import com.unifor.br.camaraconnect.repository.model.Parties
 import org.springframework.stereotype.Service
+import java.util.Collections
 import java.util.Optional
 
 @Service
 class PartiesService (
-    private val  partiesRepository: PartiesRepository
+    private val  partiesRepository: PartiesRepository,
+    private val partiesFactory: PartiesFactory,
+    private val mediationCaseRepository: MediationCaseRepository
 ){
-    fun createParty(party: Parties): Optional<Parties>{
-        val newParty = partiesRepository.save(party)
+    fun createParty(
+        name: String,
+        documentNumber: String,
+        partyType: String,
+        caseId: Int,
+        legalRepresentativeId: MutableList<LegalRepresentativeRequestDTO> = Collections.emptyList(),
+        contact: MutableList<PartiesContactsRequestDTO> = Collections.emptyList()
+    ): Optional<Parties>{
+        val mediationCase = mediationCaseRepository.findById(caseId).orElseThrow { RuntimeException("Cas nao encontrado") }
+        val creatingParty = partiesFactory.createParty(name, documentNumber, partyType, legalRepresentativeId, contact, mediationCase)
+        val newParty = partiesRepository.save(creatingParty)
         return Optional.of(newParty)
     }
+
     fun updateParty(id:Int, party: Parties):Optional<Parties>{
         val partyOptional = partiesRepository.findById(id)
         if (partyOptional.isEmpty){
@@ -48,7 +65,7 @@ class PartiesService (
         return Optional.of(partyOptional.get())
     }
 
-    fun partyExistsByDocumentNumber(documentNumber: String): Optional<Boolean>{
+    fun partyExistsByDocumentNumber(documentNumber: String): Boolean{
         return partiesRepository.existsByDocumentNumber(documentNumber)
     }
 

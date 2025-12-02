@@ -45,16 +45,16 @@ class LegalRepresentativeContactsService (
         return legalRepresentativeContactsRepository.findAllByLegalRepresentativeId(representative)
     }
 
-    fun findAllByLegalRepresentativeId_LegalRepresentativeId(representativeId: Int):List<LegalRepresentativeContacts>{
-        return legalRepresentativeContactsRepository.findAllByLegalRepresentativeId_LegalRepresentativeId(representativeId)
+    fun findAllByLegalRepresentativeId_RepresentativeId(representativeId: Int):List<LegalRepresentativeContacts>{
+        return legalRepresentativeContactsRepository.findAllByLegalRepresentativeId_RepresentativeId(representativeId)
     }
 
     fun findByLegalRepresentativeIdAndIsPrimaryTrue(representative: LegalRepresentative):List<LegalRepresentativeContacts> {
         return legalRepresentativeContactsRepository.findByLegalRepresentativeIdAndIsPrimaryTrue(representative)
     }
 
-    fun findByLegalRepresentativeId_LegalRepresentativeIdAndIsPrimaryTrue(representativeId: Int): List<LegalRepresentativeContacts> {
-        return legalRepresentativeContactsRepository.findByLegalRepresentativeId_LegalRepresentativeIdAndIsPrimaryTrue(representativeId)
+    fun findByLegalRepresentativeId_RepresentativeIdAndIsPrimaryTrue(representativeId: Int): List<LegalRepresentativeContacts> {
+        return legalRepresentativeContactsRepository.findByLegalRepresentativeId_RepresentativeIdAndIsPrimaryTrue(representativeId)
     }
 
     fun findAllByContactType(contactType: ContactType): List<LegalRepresentativeContacts> {
@@ -65,8 +65,8 @@ class LegalRepresentativeContactsService (
         return legalRepresentativeContactsRepository.findAllByLegalRepresentativeIdAndContactType(representative, contactType)
     }
 
-    fun findAllByLegalRepresentativeId_LegalRepresentativeIdAndContactType(representativeId: Int, contactType: ContactType): List<LegalRepresentativeContacts> {
-        return legalRepresentativeContactsRepository.findAllByLegalRepresentativeId_LegalRepresentativeIdAndContactType(representativeId, contactType)
+    fun findAllByLegalRepresentativeId_RepresentativeIdAndContactType(representativeId: Int, contactType: ContactType): List<LegalRepresentativeContacts> {
+        return legalRepresentativeContactsRepository.findAllByLegalRepresentativeId_RepresentativeIdAndContactType(representativeId, contactType)
     }
 
     fun findRepresentativeByContact(contact: String): Optional<LegalRepresentativeContacts>{

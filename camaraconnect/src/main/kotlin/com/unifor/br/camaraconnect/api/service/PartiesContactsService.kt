@@ -1,5 +1,6 @@
 package com.unifor.br.camaraconnect.api.service
 
+import com.unifor.br.camaraconnect.factory.PartiesContactsFactory
 import com.unifor.br.camaraconnect.repository.MediatorRepository
 import com.unifor.br.camaraconnect.repository.PartiesContactsRepository
 import com.unifor.br.camaraconnect.repository.model.ContactType
@@ -11,12 +12,21 @@ import java.util.Optional
 
 @Service
 class PartiesContactsService (
-    private val  partiesContactsRepository: PartiesContactsRepository
+    private val partiesContactsRepository: PartiesContactsRepository,
+    private val partiesService: PartiesService,
+    private val partiesContactsFactory: PartiesContactsFactory
 
 ){
-    fun createContact(partyContact: PartiesContacts): Optional<PartiesContacts>{
-        val newContact = partiesContactsRepository.save(partyContact)
-        return Optional.of(newContact)
+    fun createContact(
+        contactType: ContactType,
+        contact: String,
+        isPrimary: Boolean = false,
+        partyId: Int
+    ): Optional<PartiesContacts>{
+        val party =  partiesService.findPartyById(partyId).orElseThrow { RuntimeException("Parte nao encontrada") }
+        val newContact = partiesContactsFactory.createContact(contactType, contact, isPrimary, party)
+        val saved = partiesContactsRepository.save(newContact)
+        return Optional.of(saved)
     }
     fun updateContact(id:Int, partyContact: PartiesContacts):Optional<PartiesContacts>{
         val contactOptional = partiesContactsRepository.findById(id)
@@ -78,7 +88,7 @@ class PartiesContactsService (
         return Optional.of(contactOptional.get())
     }
 
-    fun existsPartyByContact(contact: String): Optional<Boolean>{
+    fun existsPartyByContact(contact: String): Boolean{
         return partiesContactsRepository.existsByContact(contact)
 
     }
