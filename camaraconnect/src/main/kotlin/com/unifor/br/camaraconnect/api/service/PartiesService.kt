@@ -31,19 +31,19 @@ class PartiesService (
         return Optional.of(newParty)
     }
 
-    fun updateParty(id:Int, party: Parties):Optional<Parties>{
+    fun updateParty(id:Int, name: String, documentNumber: String, partyType: String, legalRepresentativeId: MutableList<LegalRepresentativeRequestDTO>, contact: MutableList<PartiesContactsRequestDTO>,  caseid: Int):Optional<Parties>{
         val partyOptional = partiesRepository.findById(id)
+        val mediationCase= mediationCaseRepository.findById(caseid).orElseThrow { RuntimeException("Mediação não encontrada") }
         if (partyOptional.isEmpty){
             return Optional.empty()
         }
-        val partyToUpdate= Parties(
-            partyId = partyOptional.get().partyId,
-            name = party.name,
-            documentNumber = party.documentNumber,
-            partyType = party.partyType,
-            caseId = partyOptional.get().caseId,
-            legalRepresentrativeId = party.legalRepresentrativeId,
-            contact = party.contact
+        val partyToUpdate= partiesFactory.createParty(
+            name,
+            documentNumber,
+            partyType,
+            legalRepresentativeId,
+            contact,
+            mediationCase
         )
         val updatedMediator= partiesRepository.save(partyToUpdate)
         return Optional.of(updatedMediator)

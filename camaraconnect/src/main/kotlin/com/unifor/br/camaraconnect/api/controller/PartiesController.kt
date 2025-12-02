@@ -64,15 +64,14 @@ class PartiesController (
 
     @PutMapping("/{id}")
     fun updateParty(@PathVariable id: Int, @RequestBody  partiesRequestDTO: PartiesRequestDTO): ResponseEntity<PartiesResponseDTO>{
-        val mediationCase = mediationCaseService.findMediatonCaseById(partiesRequestDTO.caseId).orElseThrow { RuntimeException("Caso nao encontrado") }
-        val partyOptional = partiesService.updateParty(id, partiesFactory.createParty(
+        val partyOptional = partiesService.updateParty(id,
             partiesRequestDTO.name,
             partiesRequestDTO.documentNumber,
             partiesRequestDTO.partyType,
             partiesRequestDTO.legalRepresentativeId,
             partiesRequestDTO.contact,
-            mediationCase,
-        ))
+            partiesRequestDTO.caseId,
+        )
         if (partyOptional.isEmpty){
             return ResponseEntity.notFound().build()
         }
