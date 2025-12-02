@@ -14,12 +14,13 @@ class PartiesContactsFactory {
         isPrimary: Boolean = false,
         partyId: Parties
     ): PartiesContacts{
-        return PartiesContacts(
-            contactType= contactType,
-            contact = contact,
-            isPrimary = isPrimary,
-            partyId = partyId
-        )
+        val contact = PartiesContacts.Builder()
+            .contactType(contactType)
+            .contact(contact)
+            .isPrimary(isPrimary)
+            .partyId(partyId)
+            .build()
+        return contact
     }
 
     fun createContactResponse(party: PartiesContacts): PartiesContactsResponseDTO{

@@ -28,18 +28,17 @@ class PartiesContactsService (
         val saved = partiesContactsRepository.save(newContact)
         return Optional.of(saved)
     }
-    fun updateContact(id:Int, partyContact: PartiesContacts):Optional<PartiesContacts>{
+    fun updateContact(
+        id:Int, contactType: ContactType,
+        contact: String,
+        isPrimary: Boolean = false,
+        partyId: Int):Optional<PartiesContacts>{
         val contactOptional = partiesContactsRepository.findById(id)
         if (contactOptional.isEmpty){
             return Optional.empty()
         }
-        val contactToUpdate= PartiesContacts(
-            contactId = contactOptional.get().contactId,
-            contactType = partyContact.contactType,
-            contact = partyContact.contact,
-            isPrimary = partyContact.isPrimary,
-            partyId = contactOptional.get().partyId
-        )
+        val party = partiesService.findPartyById(partyId).orElseThrow { RuntimeException("Caso nao encontrado") }
+        val contactToUpdate= partiesContactsFactory.createContact(contactType, contact, isPrimary, party)
         val updatedContact= partiesContactsRepository.save(contactToUpdate)
         return Optional.of(updatedContact)
     }

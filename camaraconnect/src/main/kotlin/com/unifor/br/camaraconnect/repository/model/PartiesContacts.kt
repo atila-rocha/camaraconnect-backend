@@ -17,7 +17,7 @@ import org.hibernate.annotations.UpdateTimestamp
 
 @Entity
 @Table(name = "partiescontacts")
-data class PartiesContacts(
+data class PartiesContacts private constructor(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val contactId: Int? = null,
@@ -35,4 +35,25 @@ data class PartiesContacts(
         foreignKey= ForeignKey(name = "fkPartiesContacts")
     )
     val partyId: Parties
-)
+){
+    class Builder{
+        private var contactType: ContactType = ContactType.EMAIL
+        private var contact: String = ""
+        private var isPrimary: Boolean = false
+        private var partyId: Parties ?= null
+
+        fun contactType(contactType: ContactType) = apply { this.contactType=contactType }
+        fun contact(contact: String) = apply { this.contact=contact }
+        fun isPrimary(isPrimary: Boolean) = apply { this.isPrimary=isPrimary }
+        fun partyId(partyId: Parties) = apply { this.partyId=partyId }
+
+        fun build(): PartiesContacts{
+            return PartiesContacts(
+                contactType = contactType,
+                contact = contact,
+                isPrimary = isPrimary,
+                partyId = partyId!!
+            )
+        }
+    }
+}
