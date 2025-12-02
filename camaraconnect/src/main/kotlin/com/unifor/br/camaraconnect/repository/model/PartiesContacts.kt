@@ -37,11 +37,13 @@ data class PartiesContacts private constructor(
     val partyId: Parties
 ){
     class Builder{
+        private var contactId: Int? = null
         private var contactType: ContactType = ContactType.EMAIL
         private var contact: String = ""
         private var isPrimary: Boolean = false
         private var partyId: Parties ?= null
 
+        fun contactId(contactId: Int) = apply { this.contactId = contactId}
         fun contactType(contactType: ContactType) = apply { this.contactType=contactType }
         fun contact(contact: String) = apply { this.contact=contact }
         fun isPrimary(isPrimary: Boolean) = apply { this.isPrimary=isPrimary }

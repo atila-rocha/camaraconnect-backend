@@ -192,7 +192,7 @@ class LegalRepresentativeController (
         return ResponseEntity.ok(representativeResponseDTOList)
     }
 
-    @GetMapping("/contacts/all/representative/{id}")
+    @GetMapping("/contacts/all/representative/{representativeId}")
     fun getAllContactsByLegalRepresentativeId_RepresentativeId(@PathVariable representativeId: Int): ResponseEntity<List<LegalRepresentativeContactsResponseDTO>>{
         val parties = legalRepresentativeContactsService.findAllByLegalRepresentativeId_RepresentativeId(representativeId)
         val partyResponseDTOList = parties.map { legalRepresetativeContactsFactory.createContactResponse(it) }

@@ -44,6 +44,7 @@ data class Parties private constructor(
     var contact: MutableList<PartiesContacts> = mutableListOf(),
 ){
     class Builder{
+        private var partyId: Int? = null
         private var name: String = ""
         private var documentNumber: String = ""
         private var partyType: String = ""
@@ -51,11 +52,12 @@ data class Parties private constructor(
         private var legalRepresentrativeId: MutableList<LegalRepresentative> = emptyList<LegalRepresentative>().toMutableList()
         private var contact: MutableList<PartiesContacts> = emptyList<PartiesContacts>().toMutableList()
 
+        fun partyId(partyId: Int) = apply { this.partyId=partyId }
         fun name(name: String) = apply { this.name=name }
         fun documentNumber(documentNumber: String) = apply { this.documentNumber=documentNumber }
         fun partyType(partyType: String) = apply { this.partyType=partyType }
         fun caseId(caseId: MediationCase) = apply { this.caseId=caseId }
-        fun legalRepresentrativeId(legalRepresentrativeId: MutableList<LegalRepresentative>) = apply { this.legalRepresentrativeId=legalRepresentrativeId }
+        fun legalRepresentativeId(legalRepresentrativeId: MutableList<LegalRepresentative>) = apply { this.legalRepresentrativeId=legalRepresentrativeId }
         fun contact(contact: MutableList<PartiesContacts>) = apply { this.contact=contact }
         fun build(): Parties{
             return Parties(

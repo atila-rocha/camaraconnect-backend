@@ -66,7 +66,7 @@ class MediatorController (
         return ResponseEntity.ok(mediatorFactory.createMediatorResponse(mediatorOptional.get()))
     }
 
-    @GetMapping("/{registraionNumber}")
+    @GetMapping("/registrationNumber/{registrationNumber}")
     fun getMediatorByRegistrationNumber(@PathVariable registrationNumber: String): ResponseEntity<MediatorResponseDTO>{
         val mediatorOptional = mediatorService.findMediatorByRegistrationNumber(registrationNumber)
         if (mediatorOptional.isEmpty){

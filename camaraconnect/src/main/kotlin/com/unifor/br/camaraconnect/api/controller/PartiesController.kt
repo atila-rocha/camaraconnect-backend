@@ -110,7 +110,7 @@ class PartiesController (
         return ResponseEntity(partiesContactsFactory.createContactResponse(contactOptional.get()), HttpStatus.NO_CONTENT)
     }
 
-    @GetMapping("exists/{documentNumber}")
+    @GetMapping("exists/documentNumber/{documentNumber}")
     fun getPartyExistsByDocumentNumber(@PathVariable documentNumber: String): ResponseEntity<Boolean>{
         val exists = partiesService.partyExistsByDocumentNumber(documentNumber)
         return ResponseEntity.ok(exists)
@@ -202,7 +202,7 @@ class PartiesController (
         return ResponseEntity.ok(partyResponseDTOList)
     }
 
-    @GetMapping("exists/{contact}")
+    @GetMapping("exists/contact/{contact}")
     fun existsPartyByContact(@PathVariable contact: String): ResponseEntity<Boolean>{
         val exists = partiesContactsService.existsPartyByContact(contact)
         return ResponseEntity.ok(exists)

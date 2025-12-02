@@ -39,12 +39,14 @@ data class LegalRepresentative private constructor(
     var contact: MutableList<LegalRepresentativeContacts> = mutableListOf(),
 ){
     class Builder{
+        private var representativeId: Int? = null
         private var name : String = ""
         private var oabNumber : String = ""
         private var oabState : String = ""
         private var partyId : Parties? = null
         private var contact : MutableList<LegalRepresentativeContacts> = emptyList<LegalRepresentativeContacts>().toMutableList()
 
+        fun representativeId(representativeId: Int)= apply { this.representativeId=representativeId }
         fun name(name:String)= apply { this.name=name }
         fun oabNumber(oabNumber:String)= apply { this.oabNumber=oabNumber }
         fun oabState(oabState: String)= apply { this.oabState=oabState }

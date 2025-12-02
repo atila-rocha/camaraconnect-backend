@@ -2,6 +2,7 @@ package com.unifor.br.camaraconnect.api.controller
 
 import com.unifor.br.camaraconnect.api.controller.dto.request.MediationCaseRequestDTO
 import com.unifor.br.camaraconnect.api.controller.dto.response.MediationCaseResponseDTO
+import com.unifor.br.camaraconnect.api.exception.ResourceNotFoundException
 import com.unifor.br.camaraconnect.api.service.MediationCaseService
 import com.unifor.br.camaraconnect.api.service.MediatorService
 import com.unifor.br.camaraconnect.factory.MediationCaseFactory
@@ -20,12 +21,10 @@ import org.springframework.web.bind.annotation.RestController
 
 
 @RestController
-@RequestMapping("/mediatonscases")
+@RequestMapping("/mediationcases")
 class MediationCaseController (
     private val mediationCaseService: MediationCaseService,
     private val mediationCaseFactory: MediationCaseFactory,
-    private val mediatorService: MediatorService,
-    private val mediatorRepository: MediatorRepository
 ){
     @PostMapping
     fun createMediaton(@RequestBody mediationCaseRequestDTO: MediationCaseRequestDTO): ResponseEntity<MediationCaseResponseDTO>{
@@ -38,7 +37,7 @@ class MediationCaseController (
 
     @PutMapping("/{id}")
     fun updateMediaton(@PathVariable id: Int, @RequestBody  mediationCaseRequestDTO: MediationCaseRequestDTO): ResponseEntity<MediationCaseResponseDTO>{
-        val mediatonOptional = mediationCaseService.updateMediatonCase(id, mediationCaseRequestDTO.caseNum, mediationCaseRequestDTO.description, mediationCaseRequestDTO.mediatorId, mediationCaseRequestDTO.caseStatus!!)
+        val mediatonOptional = mediationCaseService.updateMediatonCase(id, mediationCaseRequestDTO.caseNum, mediationCaseRequestDTO.description, mediationCaseRequestDTO.mediatorId, mediationCaseRequestDTO.caseStatus?:throw ResourceNotFoundException("Status não enviado"))
         if (mediatonOptional.isEmpty){
             return ResponseEntity.notFound().build()
         }
