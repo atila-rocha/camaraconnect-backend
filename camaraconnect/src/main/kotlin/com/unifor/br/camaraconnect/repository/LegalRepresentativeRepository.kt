@@ -9,7 +9,7 @@ import java.util.Optional
 interface LegalRepresentativeRepository: JpaRepository<LegalRepresentative, Int> {
     fun findByOabNumber(oabNumber: String): Optional<LegalRepresentative>
     fun findByOabNumberAndOabState(oabNumber: String, oabState: String): Optional<LegalRepresentative>
-    fun existsByOabNumberAndOabState(oabNumber: String, oabState: String): Optional<Boolean>
+    fun existsByOabNumberAndOabState(oabNumber: String, oabState: String): Boolean
     fun findAllByOabState(oabState: String): List<LegalRepresentative>
     fun findAllByPartyId(party: Parties): List<LegalRepresentative>
     fun findAllByPartyId_PartyId(partyId: Int): List<LegalRepresentative>

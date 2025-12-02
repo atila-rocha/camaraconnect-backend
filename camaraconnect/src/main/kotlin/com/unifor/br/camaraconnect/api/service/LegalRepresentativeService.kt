@@ -1,31 +1,58 @@
 package com.unifor.br.camaraconnect.api.service
 
+import com.unifor.br.camaraconnect.api.controller.dto.request.LegalRepresentativeContactsRequestDTO
+import com.unifor.br.camaraconnect.factory.LegalRepresetativeFactory
 import com.unifor.br.camaraconnect.repository.LegalRepresentativeRepository
+import com.unifor.br.camaraconnect.repository.PartiesRepository
 import com.unifor.br.camaraconnect.repository.model.LegalRepresentative
 import com.unifor.br.camaraconnect.repository.model.Parties
 import org.springframework.stereotype.Service
 import java.util.Optional
+import java.util.Collections.emptyList
 
 @Service
 class LegalRepresentativeService(
-    private val  legalRepresentativeRepository: LegalRepresentativeRepository
-) {
-        fun createRepresentative(representative: LegalRepresentative): Optional<LegalRepresentative>{
-        val newRepresentative = legalRepresentativeRepository.save(representative)
+    private val  legalRepresentativeRepository: LegalRepresentativeRepository,
+    private val partiesRepository: PartiesRepository,
+    private val legalRepresetativeFactory: LegalRepresetativeFactory,
+    ) {
+        fun createRepresentative(
+            name: String,
+            oabNumber: String,
+            oabState: String,
+            partyId: Int,
+            contacts: List<LegalRepresentativeContactsRequestDTO> = emptyList()
+        ): Optional<LegalRepresentative>{
+            val party = partiesRepository.findById(partyId).orElseThrow { RuntimeException("Parte não encontrada") }
+            val representative = legalRepresetativeFactory.createRepresentative(
+                name,
+                oabNumber,
+                oabState,
+                partyId,
+                contacts,
+                party,
+            )
+            val newRepresentative = legalRepresentativeRepository.save(representative)
         return Optional.of(newRepresentative)
     }
-    fun updateRepresentative(id:Int, representative: LegalRepresentative):Optional<LegalRepresentative>{
+    fun updateRepresentative(
+        id:Int, name: String,
+        oabNumber: String,
+        oabState: String,
+        partyId: Int,
+        contacts: List<LegalRepresentativeContactsRequestDTO> = emptyList()):Optional<LegalRepresentative>{
         val representativeOptional = legalRepresentativeRepository.findById(id)
         if (representativeOptional.isEmpty){
             return Optional.empty()
         }
-        val representativeToUpdate= LegalRepresentative(
-            representativeId = representativeOptional.get().representativeId,
-            name = representative.name,
-            oabNumber = representative.oabNumber,
-            oabState = representative.oabState,
-            partyId = representative.partyId,
-            contact = representative.contact
+        val party = partiesRepository.findById(partyId).orElseThrow { RuntimeException("Parte nao encontrada") }
+        val representativeToUpdate= legalRepresetativeFactory.createRepresentative(
+            name,
+            oabNumber,
+            oabState,
+            partyId,
+            contacts,
+            party
         )
         val updatedRepresentative= legalRepresentativeRepository.save(representativeToUpdate)
         return Optional.of(updatedRepresentative)
@@ -55,11 +82,19 @@ class LegalRepresentativeService(
         return Optional.of(representativeOptional.get())
     }
 
-    fun existsRepresentativeByOabNumberAndOabState(oabNumber: String, oabState: String): Optional<Boolean>{
+    fun findRepresentativeById(id: Int): Optional<LegalRepresentative>{
+        val representativeOptional = legalRepresentativeRepository.findById(id)
+        if (representativeOptional.isEmpty){
+            return Optional.empty()
+        }
+        return Optional.of(representativeOptional.get())
+    }
+
+    fun existsRepresentativeByOabNumberAndOabState(oabNumber: String, oabState: String): Boolean{
         return legalRepresentativeRepository.existsByOabNumberAndOabState(oabNumber, oabState)
     }
 
-    fun findAllByOabState(oabNumber: String, oabState: String): List<LegalRepresentative>{
+    fun findAllByOabState(oabState: String): List<LegalRepresentative>{
         return legalRepresentativeRepository.findAllByOabState(oabState)
     }
 
