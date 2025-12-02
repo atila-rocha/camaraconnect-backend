@@ -1,33 +1,49 @@
 package com.unifor.br.camaraconnect.api.service
 
 
+import com.unifor.br.camaraconnect.factory.LegalRepresentativeContactsFactory
 import com.unifor.br.camaraconnect.repository.model.ContactType
 import com.unifor.br.camaraconnect.repository.model.LegalRepresentativeContacts
 import com.unifor.br.camaraconnect.repository.LegalRepresentativeContactsRepository
+import com.unifor.br.camaraconnect.repository.LegalRepresentativeRepository
 import com.unifor.br.camaraconnect.repository.model.LegalRepresentative
 import org.springframework.stereotype.Service
 import java.util.Optional
 
 @Service
 class LegalRepresentativeContactsService (
-    private val  legalRepresentativeContactsRepository: LegalRepresentativeContactsRepository
+    private val  legalRepresentativeContactsRepository: LegalRepresentativeContactsRepository,
+    private val  legalRepresentativeRepository: LegalRepresentativeRepository,
+    private val  legalRepresentativeContactsFactory: LegalRepresentativeContactsFactory
 
 ){
-    fun createContact(legalContact: LegalRepresentativeContacts): Optional<LegalRepresentativeContacts>{
-        val newContact = legalRepresentativeContactsRepository.save(legalContact)
-        return Optional.of(newContact)
+    fun createContact(
+        contactType: ContactType,
+        contact: String,
+        isPrimary: Boolean = false,
+        legalRepresentativeId: Int
+    ): Optional<LegalRepresentativeContacts>{
+        val representative =legalRepresentativeRepository.findById(legalRepresentativeId).orElseThrow { RuntimeException("Representante não encontrado") }
+        val newContact = legalRepresentativeContactsFactory.createContact(contactType,contact,isPrimary,representative)
+        val saved = legalRepresentativeContactsRepository.save(newContact)
+        return Optional.of(saved)
     }
-    fun updateContact(id:Int, legalContact: LegalRepresentativeContacts):Optional<LegalRepresentativeContacts>{
+    fun updateContact(
+        id:Int,
+        contactType: ContactType,
+        contact: String,
+        isPrimary: Boolean = false,
+        legalRepresentativeId: Int):Optional<LegalRepresentativeContacts>{
         val contactOptional = legalRepresentativeContactsRepository.findById(id)
+        val representative =legalRepresentativeRepository.findById(legalRepresentativeId).orElseThrow { RuntimeException("Representante não encontrado") }
         if (contactOptional.isEmpty){
             return Optional.empty()
         }
-        val contactToUpdate= LegalRepresentativeContacts(
-            contactId = contactOptional.get().contactId,
-            contactType = legalContact.contactType,
-            contact = legalContact.contact,
-            isPrimary = legalContact.isPrimary,
-            legalRepresentativeId = contactOptional.get().legalRepresentativeId
+        val contactToUpdate= legalRepresentativeContactsFactory.createContact(
+            contactType,
+            contact,
+            isPrimary,
+            representative
         )
         val updatedContact= legalRepresentativeContactsRepository.save(contactToUpdate)
         return Optional.of(updatedContact)
@@ -49,11 +65,11 @@ class LegalRepresentativeContactsService (
         return legalRepresentativeContactsRepository.findAllByLegalRepresentativeId_RepresentativeId(representativeId)
     }
 
-    fun findByLegalRepresentativeIdAndIsPrimaryTrue(representative: LegalRepresentative):List<LegalRepresentativeContacts> {
+    fun findByLegalRepresentativeIdAndIsPrimaryTrue(representative: LegalRepresentative):Optional<LegalRepresentativeContacts> {
         return legalRepresentativeContactsRepository.findByLegalRepresentativeIdAndIsPrimaryTrue(representative)
     }
 
-    fun findByLegalRepresentativeId_RepresentativeIdAndIsPrimaryTrue(representativeId: Int): List<LegalRepresentativeContacts> {
+    fun findByLegalRepresentativeId_RepresentativeIdAndIsPrimaryTrue(representativeId: Int): Optional<LegalRepresentativeContacts> {
         return legalRepresentativeContactsRepository.findByLegalRepresentativeId_RepresentativeIdAndIsPrimaryTrue(representativeId)
     }
 
@@ -69,7 +85,7 @@ class LegalRepresentativeContactsService (
         return legalRepresentativeContactsRepository.findAllByLegalRepresentativeId_RepresentativeIdAndContactType(representativeId, contactType)
     }
 
-    fun findRepresentativeByContact(contact: String): Optional<LegalRepresentativeContacts>{
+    fun findContactByContact(contact: String): Optional<LegalRepresentativeContacts>{
         val contactOptional = legalRepresentativeContactsRepository.findByContact(contact)
         if (contactOptional.isEmpty){
             return Optional.empty()
@@ -77,7 +93,7 @@ class LegalRepresentativeContactsService (
         return Optional.of(contactOptional.get())
     }
 
-    fun existsRepresentativeByContact(contact: String): Optional<Boolean>{
+    fun existsContactByContact(contact: String): Boolean{
         return legalRepresentativeContactsRepository.existsByContact(contact)
 
     }

@@ -8,7 +8,6 @@ data class LegalRepresentativeContactsResponseDTO (
     val contactType: ContactType,
     val contact: String,
     val isPrimary: Boolean,
-    val legalRepresentativeId: Int,
     val datetimeCreatedAt: LocalDateTime,
     val datetimeUpdatedAt: LocalDateTime,
 )

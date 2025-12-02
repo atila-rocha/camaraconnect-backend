@@ -12,9 +12,9 @@ interface LegalRepresentativeContactsRepository: JpaRepository<LegalRepresentati
 
     fun findAllByLegalRepresentativeId_RepresentativeId(representativeId: Int): List<LegalRepresentativeContacts>
 
-    fun findByLegalRepresentativeIdAndIsPrimaryTrue(representative: LegalRepresentative): List<LegalRepresentativeContacts>
+    fun findByLegalRepresentativeIdAndIsPrimaryTrue(representative: LegalRepresentative): Optional<LegalRepresentativeContacts>
 
-    fun findByLegalRepresentativeId_RepresentativeIdAndIsPrimaryTrue(representativeId: Int): List<LegalRepresentativeContacts>
+    fun findByLegalRepresentativeId_RepresentativeIdAndIsPrimaryTrue(representativeId: Int): Optional<LegalRepresentativeContacts>
 
     fun findAllByContactType(contactType: ContactType): List<LegalRepresentativeContacts>
 
@@ -24,5 +24,5 @@ interface LegalRepresentativeContactsRepository: JpaRepository<LegalRepresentati
 
     fun findByContact(contact: String): Optional<LegalRepresentativeContacts>
 
-    fun existsByContact(contact: String): Optional<Boolean>
+    fun existsByContact(contact: String): Boolean
 }
