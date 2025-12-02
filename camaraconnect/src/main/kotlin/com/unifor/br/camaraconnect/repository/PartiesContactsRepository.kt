@@ -25,5 +25,5 @@ interface PartiesContactsRepository: JpaRepository<PartiesContacts, Int> {
 
     fun findByContact(contact: String): Optional<PartiesContacts>
 
-    fun existsByContact(contact: String): Optional<Boolean>
+    fun existsByContact(contact: String): Boolean
 }

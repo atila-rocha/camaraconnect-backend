@@ -6,7 +6,6 @@ import com.unifor.br.camaraconnect.repository.model.Mediator
 import com.unifor.br.camaraconnect.repository.model.Parties
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.Optional
-import javax.swing.text.html.Option
 
 
 interface MediationCaseRepository: JpaRepository<MediationCase, Int> {
@@ -17,7 +16,7 @@ interface MediationCaseRepository: JpaRepository<MediationCase, Int> {
     //CREATED BY FIRST
     fun findAllByCaseStatusOrderByDatetimeCreatedAtDesc(caseStatus: CaseStatus): List<MediationCase>
     //UPDATED AT FIRST
-    fun findByAllCaseStatusOrderByDatetimeUpdatedAtDesc(caseStatus: CaseStatus): List<MediationCase>
+    fun findAllByCaseStatusOrderByDatetimeUpdatedAtDesc(caseStatus: CaseStatus): List<MediationCase>
 
     fun findAllByMediatorId(mediator: Mediator): List<MediationCase>
 
@@ -33,8 +32,8 @@ interface MediationCaseRepository: JpaRepository<MediationCase, Int> {
 
     fun findAllByPartyId_NameContainingIgnoreCase(name: String): List<MediationCase>
 
-    fun countByCaseStatus(caseStatus: CaseStatus): Optional<Long>
+    fun countByCaseStatus(caseStatus: CaseStatus): Long
 
-    fun existsByCaseNum(caseNum: String): Optional<Boolean>
+    fun existsByCaseNum(caseNum: String): Boolean
 
 }

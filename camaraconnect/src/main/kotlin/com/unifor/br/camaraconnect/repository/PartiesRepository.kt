@@ -9,7 +9,7 @@ import java.util.Optional
 interface PartiesRepository: JpaRepository<Parties, Int> {
     fun findByDocumentNumber(documentNumber: String): Optional<Parties>
 
-    fun existsByDocumentNumber(documentNumber: String): Optional<Boolean>
+    fun existsByDocumentNumber(documentNumber: String): Boolean
 
     fun findAllByNameContainingIgnoreCase(name: String): List<Parties>
 
