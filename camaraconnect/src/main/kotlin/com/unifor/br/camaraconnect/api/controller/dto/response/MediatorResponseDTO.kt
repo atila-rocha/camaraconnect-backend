@@ -2,6 +2,7 @@ package com.unifor.br.camaraconnect.api.controller.dto.response
 
 import com.unifor.br.camaraconnect.repository.model.MediationCase
 import java.time.LocalDateTime
+import java.util.Collections.emptyList
 
 data class MediatorResponseDTO (
     val mediatorId: Int,
@@ -10,6 +11,6 @@ data class MediatorResponseDTO (
     val username: String,
     val datetimeCratedAt: LocalDateTime,
     val datetimeUpdatedAt: LocalDateTime,
-    val mediationCases: List<Int> = emptyList()
+    val mediationCases: MutableList<MediationCase> = emptyList()
 
 )

@@ -1,6 +1,8 @@
 package com.unifor.br.camaraconnect.api.controller.dto.response
 
 import com.unifor.br.camaraconnect.repository.model.CaseStatus
+import com.unifor.br.camaraconnect.repository.model.Mediator
+import com.unifor.br.camaraconnect.repository.model.Parties
 import java.time.LocalDateTime
 
 data class MediationCaseResponseDTO (
@@ -9,7 +11,6 @@ data class MediationCaseResponseDTO (
     val description : String,
     val caseStatus : CaseStatus,
     val mediatorId : Int,
-    val parties : List<Int>,
     val datetimeCreatedAt : LocalDateTime,
     val datetimeUpdatedAt : LocalDateTime,
     )
