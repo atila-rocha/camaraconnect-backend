@@ -80,13 +80,12 @@ class PartiesController (
 
     @PutMapping("/contact/{id}")
     fun updateContact(@PathVariable id: Int, @RequestBody partiesContactsRequestDTO: PartiesContactsRequestDTO): ResponseEntity<PartiesContactsResponseDTO>{
-        val party = partiesService.findPartyById(partiesContactsRequestDTO.partyId).orElseThrow { RuntimeException("Caso nao encontrado") }
-        val contactOptional = partiesContactsService.updateContact(id, partiesContactsFactory.createContact(
+        val contactOptional = partiesContactsService.updateContact(id,
             partiesContactsRequestDTO.contactType,
             partiesContactsRequestDTO.contact,
             partiesContactsRequestDTO.isPrimary,
-            party,
-        ))
+            partiesContactsRequestDTO.partyId,
+        )
         if (contactOptional.isEmpty){
             return ResponseEntity.notFound().build()
         }

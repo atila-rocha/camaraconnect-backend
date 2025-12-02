@@ -18,35 +18,37 @@ class PartiesFactory {
                     partyType: String,
                     legalRepresentativeId: MutableList<LegalRepresentativeRequestDTO> = Collections.emptyList(),
                     contact: MutableList<PartiesContactsRequestDTO> = Collections.emptyList(), mediationCase: MediationCase): Parties{
-        var party = Parties(
-            name = name,
-            documentNumber = documentNumber,
-            partyType = partyType,
-            caseId = mediationCase
-        )
+        var party = Parties.Builder()
+            .name(name)
+            .documentNumber(documentNumber)
+            .partyType(partyType)
+            .caseId(mediationCase)
+            .build()
 
-        party.contact = contact.map { PartiesContacts(
-            contactType = it.contactType,
-            contact = it.contact,
-            isPrimary = it.isPrimary,
-            partyId = party
-        )}.toMutableList()
+        party.contact = contact.map {
+            PartiesContacts.Builder()
+                .contactType(it.contactType)
+                .contact(it.contact)
+                .isPrimary(it.isPrimary)
+                .partyId(party)
+                .build()
+            }.toMutableList()
 
         party.legalRepresentrativeId= legalRepresentativeId.map {
-            val representative = LegalRepresentative(
-                name = it.name,
-                oabNumber = it.oabNumber,
-                oabState = it.oabState,
-                partyId = party,
-            )
+            val representative = LegalRepresentative.Builder()
+                .name(it.name)
+                .oabNumber(it.oabNumber)
+                .oabState(it.oabState)
+                .partyId(party)
+                .build()
 
             val representativeContacts = it.contacts.map {
-                LegalRepresentativeContacts(
-                    contactType = it.contactType,
-                    contact = it.contact,
-                    isPrimary = it.isPrimary,
-                    legalRepresentativeId = representative
-                )
+                LegalRepresentativeContacts.Builder()
+                    .contactType(it.contactType)
+                    .contact(it.contact)
+                    .isPrimary(it.isPrimary)
+                    .legalRepresentative(representative)
+                    .build()
             }.toMutableList()
 
             representative.contact=representativeContacts
