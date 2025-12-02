@@ -36,14 +36,14 @@ class MediationCaseService (
 //        if (mediationOptional.isEmpty){
 //            return Optional.empty()
 //        }
-        val mediatonToUpdate= MediationCase(
-            caseId = mediationOptional.caseId,
-            caseNum = mediationOptional.caseNum,
-            description = description,
-            caseStatus = caseStatus,
-            mediatorId = mediator,
-            partyId = parties
-        )
+        val mediatonToUpdate= MediationCase.Builder()
+            .caseId(mediationOptional.caseId!!)
+            .caseNum(mediationOptional.caseNum)
+            .description(description!!)
+            .caseStatus(caseStatus)
+            .mediatorId(mediator)
+            .partyId(parties)
+            .build()
         val updatedMediaton= mediationcaseRepository.save(mediatonToUpdate)
         return Optional.of(updatedMediaton)
     }

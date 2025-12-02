@@ -10,11 +10,12 @@ import org.springframework.stereotype.Component
 @Component
 class MediationCaseFactory {
     fun  createMediationCase(caseNum: String, description: String? = "", mediator: Mediator): MediationCase{
-        return MediationCase(
-            caseNum = caseNum,
-            description = description,
-            mediatorId = mediator,
-        )
+        val mediation = MediationCase.Builder()
+            .caseNum(caseNum)
+            .description(description!!)
+            .mediatorId(mediator)
+            .build()
+        return mediation
     }
 
     fun createMediationCaseResponse(mediationCase: MediationCase): MediationCaseResponseDTO{
