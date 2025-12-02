@@ -16,7 +16,7 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name="mediator")
-data class Mediator(
+data class Mediator private constructor(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val mediatorId: Int? = null,
@@ -35,4 +35,26 @@ data class Mediator(
         cascade = [jakarta.persistence.CascadeType.ALL],
         orphanRemoval = true)
     var mediationCases: MutableList<MediationCase> = mutableListOf()
-)
+){
+    class Builder{
+        private var mediatorId: Int ?=null
+        private var registrationNumber: String=""
+        private var userId: User?= null
+        private var mediationCases: MutableList<MediationCase> = emptyList<MediationCase>().toMutableList()
+
+        fun mediatorId(mediatorId: Int) = apply { this.mediatorId=mediatorId }
+        fun registrationNumber(registrationNumber: String) = apply { this.registrationNumber=registrationNumber }
+        fun userId(userId: User) = apply { this.userId=userId }
+        fun mediationCases(mediationCases: MutableList<MediationCase>) = apply { this.mediationCases=mediationCases }
+
+        fun build(): Mediator{
+            return Mediator(
+                registrationNumber = registrationNumber,
+                userId = userId!!,
+                mediationCases = mediationCases
+            )
+        }
+    }
+
+
+}

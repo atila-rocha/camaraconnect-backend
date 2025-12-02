@@ -1,7 +1,6 @@
 package com.unifor.br.camaraconnect.api.controller
 
 import com.unifor.br.camaraconnect.api.controller.dto.request.MediatorRequestDTO
-import com.unifor.br.camaraconnect.api.controller.dto.request.UserRequestDTO
 import com.unifor.br.camaraconnect.api.controller.dto.response.MediatorResponseDTO
 import com.unifor.br.camaraconnect.api.service.MediatorService
 import com.unifor.br.camaraconnect.factory.MediatorFactory
@@ -24,7 +23,11 @@ class MediatorController (
 ){
     @PostMapping
     fun createMediator(@RequestBody mediatorRequestDTO: MediatorRequestDTO): ResponseEntity<MediatorResponseDTO>{
-        val mediatorOptional = mediatorService.createMediator(mediatorFactory.createMediator(mediatorRequestDTO))
+        val mediatorOptional = mediatorService.createMediator(
+            mediatorRequestDTO.resgistrationNumber,
+            mediatorRequestDTO.userId,
+            mediatorRequestDTO.mediationCases
+        )
         if (mediatorOptional.isEmpty){
             return ResponseEntity.badRequest().build()
         }
@@ -33,7 +36,12 @@ class MediatorController (
 
     @PutMapping("/{id}")
     fun updateMediator(@PathVariable id: Int, @RequestBody  mediatorRequestDTO: MediatorRequestDTO): ResponseEntity<MediatorResponseDTO>{
-        val mediatorOptional = mediatorService.updateMediator(id, mediatorFactory.createMediator(mediatorRequestDTO))
+        val mediatorOptional = mediatorService.updateMediator(
+            id,
+            mediatorRequestDTO.resgistrationNumber,
+            mediatorRequestDTO.userId,
+            mediatorRequestDTO.mediationCases
+        )
         if (mediatorOptional.isEmpty){
             return ResponseEntity.notFound().build()
         }
