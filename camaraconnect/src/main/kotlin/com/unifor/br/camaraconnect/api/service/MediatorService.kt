@@ -1,5 +1,6 @@
 package com.unifor.br.camaraconnect.api.service
 
+import com.unifor.br.camaraconnect.api.exception.ResourceNotFoundException
 import com.unifor.br.camaraconnect.factory.MediatorFactory
 import com.unifor.br.camaraconnect.repository.MediationCaseRepository
 import com.unifor.br.camaraconnect.repository.MediatorRepository
@@ -22,7 +23,7 @@ class MediatorService(
         userId: Int,
         mediationCases: List<Int> = emptyList()
     ): Optional<Mediator>{
-        val user = userRepository.findById(userId).orElseThrow { RuntimeException("Usuário não enciontrado") }
+        val user = userRepository.findById(userId).orElseThrow { ResourceNotFoundException("Usuário não enciontrado") }
         val mediator= mediatorFactory.createMediator(resgistrationNumber,userId, mediationCases, user)
         val newMediator = mediatorRepository.save(mediator)
         return Optional.of(newMediator)
@@ -35,7 +36,7 @@ class MediatorService(
     ):Optional<Mediator>{
         val mediatorOptional = mediatorRepository.findById(id)
         val cases = mediationCases.map {
-            val case = mediationCaseRepository.findById(it).orElseThrow { RuntimeException("Caso não encontrado") }
+            val case = mediationCaseRepository.findById(it).orElseThrow { ResourceNotFoundException("Caso não encontrado") }
             case
         }.toMutableList()
         if (mediatorOptional.isEmpty){

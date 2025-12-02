@@ -1,6 +1,7 @@
 package com.unifor.br.camaraconnect.api.service
 
 
+import com.unifor.br.camaraconnect.api.exception.ResourceNotFoundException
 import com.unifor.br.camaraconnect.factory.LegalRepresentativeContactsFactory
 import com.unifor.br.camaraconnect.repository.model.ContactType
 import com.unifor.br.camaraconnect.repository.model.LegalRepresentativeContacts
@@ -35,16 +36,17 @@ class LegalRepresentativeContactsService (
         isPrimary: Boolean = false,
         legalRepresentativeId: Int):Optional<LegalRepresentativeContacts>{
         val contactOptional = legalRepresentativeContactsRepository.findById(id)
-        val representative =legalRepresentativeRepository.findById(legalRepresentativeId).orElseThrow { RuntimeException("Representante não encontrado") }
+        val representative =legalRepresentativeRepository.findById(legalRepresentativeId).orElseThrow { ResourceNotFoundException("Representante não encontrado") }
         if (contactOptional.isEmpty){
             return Optional.empty()
         }
-        val contactToUpdate= legalRepresentativeContactsFactory.createContact(
-            contactType,
-            contact,
-            isPrimary,
-            representative
-        )
+        val contactToUpdate= LegalRepresentativeContacts.Builder()
+            .contactId(id)
+            .contactType(contactType)
+            .isPrimary(isPrimary)
+            .legalRepresentative(representative)
+            .contact(contact)
+            .build()
         val updatedContact= legalRepresentativeContactsRepository.save(contactToUpdate)
         return Optional.of(updatedContact)
     }

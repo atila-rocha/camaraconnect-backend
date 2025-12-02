@@ -1,10 +1,12 @@
 package com.unifor.br.camaraconnect.api.service
 
 import com.unifor.br.camaraconnect.api.controller.dto.request.LegalRepresentativeContactsRequestDTO
+import com.unifor.br.camaraconnect.api.exception.ResourceNotFoundException
 import com.unifor.br.camaraconnect.factory.LegalRepresentativeFactory
 import com.unifor.br.camaraconnect.repository.LegalRepresentativeRepository
 import com.unifor.br.camaraconnect.repository.PartiesRepository
 import com.unifor.br.camaraconnect.repository.model.LegalRepresentative
+import com.unifor.br.camaraconnect.repository.model.LegalRepresentativeContacts
 import com.unifor.br.camaraconnect.repository.model.Parties
 import org.springframework.stereotype.Service
 import java.util.Optional
@@ -23,7 +25,7 @@ class LegalRepresentativeService(
             partyId: Int,
             contacts: List<LegalRepresentativeContactsRequestDTO> = emptyList()
         ): Optional<LegalRepresentative>{
-            val party = partiesRepository.findById(partyId).orElseThrow { RuntimeException("Parte não encontrada") }
+            val party = partiesRepository.findById(partyId).orElseThrow { ResourceNotFoundException("Parte não encontrada") }
             val representative = legalRepresentativeFactory.createRepresentative(
                 name,
                 oabNumber,
@@ -41,19 +43,28 @@ class LegalRepresentativeService(
         oabState: String,
         partyId: Int,
         contacts: List<LegalRepresentativeContactsRequestDTO> = emptyList()):Optional<LegalRepresentative>{
-        val representativeOptional = legalRepresentativeRepository.findById(id)
-        if (representativeOptional.isEmpty){
-            return Optional.empty()
-        }
-        val party = partiesRepository.findById(partyId).orElseThrow { RuntimeException("Parte nao encontrada") }
-        val representativeToUpdate= legalRepresentativeFactory.createRepresentative(
-            name,
-            oabNumber,
-            oabState,
-            partyId,
-            contacts,
-            party
-        )
+        val representativeOptional = legalRepresentativeRepository.findById(id).orElseThrow { ResourceNotFoundException("Representante não encontrado") }
+        //if (representativeOptional.isEmpty()){
+        //    return Optional.empty()
+        //}
+        val party = partiesRepository.findById(partyId).orElseThrow { ResourceNotFoundException("Parte nao encontrada") }
+        val contactsEntities = contacts.map {
+            val representativeContact= LegalRepresentativeContacts.Builder()
+                .contactType(it.contactType)
+                .contact(it.contact)
+                .isPrimary(it.isPrimary)
+                .legalRepresentative(representativeOptional)
+                .build()
+            representativeContact
+        }.toMutableList()
+        val representativeToUpdate= LegalRepresentative.Builder()
+            .representativeId(id)
+            .name(name)
+            .oabNumber(oabNumber)
+            .oabState(oabState)
+            .partyId(party)
+            .contact(contactsEntities)
+            .build()
         val updatedRepresentative= legalRepresentativeRepository.save(representativeToUpdate)
         return Optional.of(updatedRepresentative)
     }

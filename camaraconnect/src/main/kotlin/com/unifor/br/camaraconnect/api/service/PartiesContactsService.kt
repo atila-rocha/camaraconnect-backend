@@ -1,5 +1,6 @@
 package com.unifor.br.camaraconnect.api.service
 
+import com.unifor.br.camaraconnect.api.exception.ResourceNotFoundException
 import com.unifor.br.camaraconnect.factory.PartiesContactsFactory
 import com.unifor.br.camaraconnect.repository.MediatorRepository
 import com.unifor.br.camaraconnect.repository.PartiesContactsRepository
@@ -23,7 +24,7 @@ class PartiesContactsService (
         isPrimary: Boolean = false,
         partyId: Int
     ): Optional<PartiesContacts>{
-        val party =  partiesService.findPartyById(partyId).orElseThrow { RuntimeException("Parte nao encontrada") }
+        val party =  partiesService.findPartyById(partyId).orElseThrow { ResourceNotFoundException("Parte nao encontrada") }
         val newContact = partiesContactsFactory.createContact(contactType, contact, isPrimary, party)
         val saved = partiesContactsRepository.save(newContact)
         return Optional.of(saved)
@@ -37,8 +38,13 @@ class PartiesContactsService (
         if (contactOptional.isEmpty){
             return Optional.empty()
         }
-        val party = partiesService.findPartyById(partyId).orElseThrow { RuntimeException("Caso nao encontrado") }
-        val contactToUpdate= partiesContactsFactory.createContact(contactType, contact, isPrimary, party)
+        val party = partiesService.findPartyById(partyId).orElseThrow { ResourceNotFoundException("Caso nao encontrado") }
+        val contactToUpdate= PartiesContacts.Builder()
+            .contactId(id)
+            .contact(contact)
+            .isPrimary(isPrimary)
+            .partyId(party)
+            .build()
         val updatedContact= partiesContactsRepository.save(contactToUpdate)
         return Optional.of(updatedContact)
     }

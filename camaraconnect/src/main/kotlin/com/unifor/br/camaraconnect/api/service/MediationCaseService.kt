@@ -1,5 +1,6 @@
 package com.unifor.br.camaraconnect.api.service
 
+import com.unifor.br.camaraconnect.api.exception.ResourceNotFoundException
 import com.unifor.br.camaraconnect.factory.MediationCaseFactory
 import com.unifor.br.camaraconnect.repository.MediationCaseRepository
 import com.unifor.br.camaraconnect.repository.MediatorRepository
@@ -24,14 +25,14 @@ class MediationCaseService (
         description: String? = "",
         mediatorId: Int,
     ): Optional<MediationCase>{
-        val mediator = mediatorRepository.findById(mediatorId).orElseThrow { RuntimeException("Mediador não encontrado") }
+        val mediator = mediatorRepository.findById(mediatorId).orElseThrow { ResourceNotFoundException("Mediador não encontrado") }
         val saved= mediationCaseFactory.createMediationCase(caseNum, description, mediator)
         val newMediationCase = mediationcaseRepository.save(saved)
         return Optional.of(newMediationCase)
     }
     fun updateMediatonCase(id:Int, caseNum: String, description: String? = "", mediatorId: Int, caseStatus: CaseStatus):Optional<MediationCase>{
-        val mediator = mediatorRepository.findById(mediatorId).orElseThrow { RuntimeException("Mediador não encontrado") }
-        val mediationOptional = mediationcaseRepository.findById(id).orElseThrow { RuntimeException("Caso não encontrado") }
+        val mediator = mediatorRepository.findById(mediatorId).orElseThrow { ResourceNotFoundException("Mediador não encontrado") }
+        val mediationOptional = mediationcaseRepository.findById(id).orElseThrow { ResourceNotFoundException("Caso não encontrado") }
         val parties = partiesService.findAllByCaseId(mediationOptional).toMutableList()
 //        if (mediationOptional.isEmpty){
 //            return Optional.empty()
